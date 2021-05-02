@@ -1,15 +1,60 @@
 // script.js
 
 const img = new Image(); // used to load image from <input> and draw to canvas
+const canvas = document.getElementById('user-image');
+console.log(canvas);
+const context = canvas.getContext('2d');
+context.font = "30px Impact";
+const subButton = document.querySelector("[type = 'submit']");
+const resButton = document.querySelector("[type = 'reset']");
+const readButton = document.querySelector("[type = 'button']");
+console.log(subButton);
+console.log(resButton);
+console.log(readButton);
+
 
 // Fires whenever the img object loads a new image (such as with img.src =)
 img.addEventListener('load', () => {
   // TODO
+  context.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Some helpful tips:
-  // - Fill the whole Canvas with black first to add borders on non-square images, then draw on top
-  // - Clear the form when a new image is selected
-  // - If you draw the image to canvas here, it will update as soon as a new image is selected
+  subButton.disabled = false;
+  resButton.disabled = true;
+  readButton.disabled = true;
+
+  context.fillStyle = 'black';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  var dimmensions = getDimmensions(canvas.width, canvas.height, img.width, img.height);
+  context.drawImage(img, dimmensions.startX, dimmensions.startY, dimmensions.width, dimmensions.height);
+  
+});
+
+
+//input: image-input
+const inpImg = document.querySelector("[type = 'file']");
+console.log(inpImg);
+inpImg.addEventListener('change', () => {
+  var selectedImg = inpImg.files[0];
+  var imgurl = URL.createObjectURL(selectedImg);
+  console.log(imgurl);
+  img.src = imgurl;
+  img.alt = selectedImg.name;
+  console.log(img.alt);
+});
+
+
+//form: submit code
+const genner = document.getElementById('generate-meme');
+console.log(genner);
+genner.addEventListener('submit', () =>{
+  event.preventDefault();
+  var weLiveInASociety = document.getElementById('text-top').value;
+  var bottomText = document.getElementById('text-bottom').value;
+  context.fillStyle = "white";
+  var dimmensions = getDimmensions(canvas.width, canvas.height, img.width, img.height);
+  context.fillText(weLiveInASociety, dimmensions.width/2, dimmensions.startY - 10);
+  context.fillText(bottomText, dimmensions.width/2, dimmensions.height - 20)
+
 });
 
 /**
