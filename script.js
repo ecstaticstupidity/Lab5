@@ -109,6 +109,7 @@ if(speechSynthesis.onvoiceschanged !== undefined) {
   speechSynthesis.onvoiceschanged = populateVoiceList;
 }
 
+//var vol = 1.0;
 
 readButton.addEventListener('click', event => {
   var weLiveInASociety = document.getElementById('text-top').value;
@@ -129,6 +130,8 @@ readButton.addEventListener('click', event => {
   utterBot.rate = 1;
   utterTop.lang = 'English';
   utterBot.lang = 'English';
+  //utterTop.volume = vol;
+  //utterBot.volume = vol;
   synth.speak(utterTop);
   
   console.log(utterTop);
@@ -139,36 +142,32 @@ readButton.addEventListener('click', event => {
 
 var volControl = document.querySelector('[type = "range"]')
 volControl.addEventListener('input', () => {
-  synth.volume = volControl.value;
+  synth.vol = volControl.value / 100;
   //utterBot.volume = volControl.value;
 
-  var icon = document.getElementById('volume-group');
-  console.log(icon);
-  var iconsrc = icon.src;
-  var iconalt = icon.alt;
+  var icon = document.getElementById('volume-group').getElementsByTagName("img")[0];
   if(volControl.value >= 67) {
     //use vol level 3
-    iconsrc = "icons/volume=level-3.svg";
-    console.log(iconsrc);
-    iconalt = "Volume Level 3";
+    icon.src = "icons/volume-level-3.svg";
+    icon.alt = "Volume Level 3";
   }
 
   else if(volControl.value >= 34) {
     //use vol level 2
-    iconsrc = "icons/volume-level-2.svg";
-    iconalt = "Volume Level 2";
+    icon.src = "icons/volume-level-2.svg";
+    icon.alt = "Volume Level 2";
   }
 
   else if(volControl.value >= 1) {
     //use vol level 1
-    iconsrc = "icons/volume-level-1.svg";
-    iconalt = "Volume Level 1";
+    icon.src = "icons/volume-level-1.svg";
+    icon.alt = "Volume Level 1";
   }
 
   else {
     //use vol level 0
-    iconsrc = "icons/volume-level-0.svg";
-    iconalt = "Volume Level 0";
+    icon.src = "icons/volume-level-0.svg";
+    icon.alt = "Volume Level 0";
   }
 
 });
