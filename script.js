@@ -1,16 +1,17 @@
 // script.js
 
 const img = new Image(); // used to load image from <input> and draw to canvas
+
+//instantiate canvas and context for it
 const canvas = document.getElementById('user-image');
 console.log(canvas);
 const context = canvas.getContext('2d');
 context.font = "30px Impact";
+
+//vars to control buttons
 const subButton = document.querySelector("[type = 'submit']");
 const resButton = document.querySelector("[type = 'reset']");
 const readButton = document.querySelector("[type = 'button']");
-console.log(subButton);
-console.log(resButton);
-console.log(readButton);
 
 
 // Fires whenever the img object loads a new image (such as with img.src =)
@@ -48,12 +49,127 @@ const genner = document.getElementById('generate-meme');
 console.log(genner);
 genner.addEventListener('submit', () =>{
   event.preventDefault();
+
+  //on submit, generate meme by grabbing text in two inputs. Add relevant text to canvas
+  let weLiveInASociety = document.getElementById('text-top').value;
+  let bottomText = document.getElementById('text-bottom').value;
+  context.fillStyle = "white";
+  context.textAlign = "center";
+
+  let dimmensions = getDimmensions(canvas.width, canvas.height, img.width, img.height);
+
+  context.fillText(weLiveInASociety, canvas.width/2, 30);
+  context.fillText(bottomText, canvas.width/2, canvas.height -10);
+
+  //toggle relevant buttons
+  subButton.disabled = true;
+  resButton.disabled = false;
+  readButton.disabled = false;
+});
+
+//button: clear
+resButton.addEventListener('click', event => {
+  //clear image and/or text present
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  imgurl.revokeObjectURL();
+  //toggle relevant buttons
+  resButton.disabled = true;
+  readButton.disabled = true;
+  subButton.disabled = false;
+});
+
+//vars to control text to speech
+var synth = window.speechSynthesis;
+var voiceChooser = document.getElementById('voice-selection');
+console.log(voiceChooser);
+voiceChooser.disabled = false;
+var synth = window.speechSynthesis;
+var voices = [];
+
+
+
+function populateVoiceList() {
+  voices = synth.getVoices();
+  for(let i = 0; i < voices.length; i++) {
+    var option = document.createElement('option');
+    option.textContent = voices[i].name + ' (' + voices[i].lang +  ')';
+
+    if(voices[i].default) {
+      option.textContent += ' -- DEFAULT';
+    }
+
+    option.setAttribute('data-lang', voices[i].lang);
+    option.setAttribute('data-name', voices[i].name);
+    voiceChooser.appendChild(option);
+  }
+}
+
+populateVoiceList();
+if(speechSynthesis.onvoiceschanged !== undefined) {
+  speechSynthesis.onvoiceschanged = populateVoiceList;
+}
+
+
+readButton.addEventListener('click', event => {
   var weLiveInASociety = document.getElementById('text-top').value;
   var bottomText = document.getElementById('text-bottom').value;
-  context.fillStyle = "white";
-  var dimmensions = getDimmensions(canvas.width, canvas.height, img.width, img.height);
-  context.fillText(weLiveInASociety, dimmensions.width/2, dimmensions.startY - 10);
-  context.fillText(bottomText, dimmensions.width/2, dimmensions.height - 20)
+  var utterTop = new SpeechSynthesisUtterance(weLiveInASociety);
+  var utterBot = new SpeechSynthesisUtterance(bottomText);
+  var selectedOption = voiceChooser.selectedOptions[0].getAttribute('data-name');
+  for(let i = 0; i < voices.length; i++) {
+    if(voices[i].name === selectedOption) {
+      utterTop.voice = voices[i];
+      utterBot.voice = voices[i];
+    }
+  }
+
+  utterTop.pitch = 1;
+  utterBot.pitch = 1;
+  utterTop.rate = 1;
+  utterBot.rate = 1;
+  utterTop.lang = 'English';
+  utterBot.lang = 'English';
+  synth.speak(utterTop);
+  
+  console.log(utterTop);
+  synth.speak(utterBot);
+  console.log(utterBot);
+  console.log(synth);
+}); 
+
+var volControl = document.querySelector('[type = "range"]')
+volControl.addEventListener('input', () => {
+  synth.volume = volControl.value;
+  //utterBot.volume = volControl.value;
+
+  var icon = document.getElementById('volume-group');
+  console.log(icon);
+  var iconsrc = icon.src;
+  var iconalt = icon.alt;
+  if(volControl.value >= 67) {
+    //use vol level 3
+    iconsrc = "icons/volume=level-3.svg";
+    console.log(iconsrc);
+    iconalt = "Volume Level 3";
+  }
+
+  else if(volControl.value >= 34) {
+    //use vol level 2
+    iconsrc = "icons/volume-level-2.svg";
+    iconalt = "Volume Level 2";
+  }
+
+  else if(volControl.value >= 1) {
+    //use vol level 1
+    iconsrc = "icons/volume-level-1.svg";
+    iconalt = "Volume Level 1";
+  }
+
+  else {
+    //use vol level 0
+    iconsrc = "icons/volume-level-0.svg";
+    iconalt = "Volume Level 0";
+  }
 
 });
 
