@@ -5,7 +5,7 @@
 
 ## Part 1:
 
-LINK TO YOUR PUBLISHED SITE
+https://ecstaticstupidity.github.io/Lab5/
 
 ## Part 2:
 https://github.com/ecstaticstupidity/github-actions-for-ci/issues/4
