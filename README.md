@@ -8,5 +8,5 @@
 LINK TO YOUR PUBLISHED SITE
 
 ## Part 2:
-
-LINK TO YOUR PART 2 REPOSITORY
+https://github.com/ecstaticstupidity/github-actions-for-ci/issues/4
+Note: attached is a screenshot that should show that I got up to step 18 before the automated process fizzled on me. The review approval option did not show when I submitted my review. I then attempted to revert the pull request but it seemed the automated pull-requesting does not proc twice. 
